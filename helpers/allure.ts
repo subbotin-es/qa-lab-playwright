@@ -1,19 +1,16 @@
 import { allure } from 'allure-playwright';
 
 export function step(stepName: string) {
-  return function (
-    _target: object,
-    _propertyKey: string,
-    descriptor: PropertyDescriptor,
-  ): PropertyDescriptor {
-    const original = descriptor.value as (...args: unknown[]) => Promise<void>;
-
-    descriptor.value = async function (...args: unknown[]): Promise<void> {
+  return function <This, Args extends unknown[], Return>(
+    originalMethod: (this: This, ...args: Args) => Return,
+    _context: ClassMethodDecoratorContext,
+  ): (this: This, ...args: Args) => Return {
+    return async function (this: This, ...args: Args): Promise<unknown> {
+      let result: unknown;
       await allure.step(stepName, async () => {
-        await original.apply(this, args);
+        result = await (originalMethod.apply(this, args) as Promise<unknown>);
       });
-    };
-
-    return descriptor;
+      return result;
+    } as unknown as (this: This, ...args: Args) => Return;
   };
 }

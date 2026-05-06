@@ -11,6 +11,7 @@ import { DynamicVisibilitySection } from '../pages/DynamicVisibilitySection';
 import { AsyncButtonsSection } from '../pages/AsyncButtonsSection';
 import { IFrameSection } from '../pages/IFrameSection';
 import { DragDropSection } from '../pages/DragDropSection';
+import { SliderSection } from '../pages/SliderSection';
 
 type QALabFixtures = {
   qaLab: QALabPage;
@@ -25,6 +26,7 @@ type QALabFixtures = {
   asyncButtons: AsyncButtonsSection;
   iframes: IFrameSection;
   dragDrop: DragDropSection;
+  slider: SliderSection;
 };
 
 export const test = base.extend<QALabFixtures>({
@@ -65,6 +67,9 @@ export const test = base.extend<QALabFixtures>({
   },
   dragDrop: async ({ page }, use) => {
     await use(new DragDropSection(page));
+  },
+  slider: async ({ page }, use) => {
+    await use(new SliderSection(page));
   },
 });
 

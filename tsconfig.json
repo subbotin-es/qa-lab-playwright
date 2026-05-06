@@ -11,8 +11,6 @@
     "resolveJsonModule": true,
     "outDir": "./dist",
     "rootDir": "./",
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
     "skipLibCheck": true
   },
   "include": ["tests/**/*", "pages/**/*", "fixtures/**/*", "helpers/**/*", "*.ts"],
