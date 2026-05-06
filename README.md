@@ -129,9 +129,9 @@ Testing playground: [https://subbotin.es/QA-Lab/qa-lab.html](https://subbotin.es
 |---|---|---|
 | 1 | **Playwright + TypeScript** <— this project | [qa-lab-playwright](https://github.com/subbotin-es/qa-lab-playwright) |
 | 2 | Pytest + Python + Allure | [qa-lab-pytest-python](https://github.com/subbotin-es/qa-lab-pytest-python) |
-| 3 | Selenium + Java + TestNG | [qa-lab-selenium-java](https://github.com/subbotin-es/qa-lab-selenium-java)
-| 4 | Cypress + JavaScript | coming soon |
-| 5 | Playwright + C# + NUnit | [qa-lab-playwright-csharp](https://github.com/subbotin-es/qa-lab-playwright-csharp) 
+| 3 | Selenium + Java + TestNG | [qa-lab-selenium-java](https://github.com/subbotin-es/qa-lab-selenium-java) |
+| 4 | Cypress + JavaScript |  [qa-lab-cypress](https://github.com/subbotin-es/qa-lab-cypress)  |
+| 5 | Playwright + C# + NUnit | [qa-lab-playwright-csharp](https://github.com/subbotin-es/qa-lab-playwright-csharp) | 
 
 The series is designed for comparative analysis: same target, same sections, different toolchains.
 
