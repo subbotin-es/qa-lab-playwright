@@ -4,10 +4,12 @@ import { step } from '../helpers/allure';
 export class QALabPage {
   readonly page: Page;
   readonly heading: Locator;
+  readonly sidebarNav: Locator;
 
   constructor(page: Page) {
     this.page = page;
-    this.heading = page.getByRole('heading', { level: 1 }).first();
+    this.heading = page.getByRole('heading', { name: 'QA Lab - UI Automated Testing Elements' });
+    this.sidebarNav = page.locator('.qa-sidebar');
   }
 
   @step('Navigate to QA Lab')
@@ -16,7 +18,11 @@ export class QALabPage {
   }
 
   @step('Scroll to section')
-  async scrollToSection(selector: string): Promise<void> {
-    await this.page.locator(selector).scrollIntoViewIfNeeded();
+  async scrollToSection(sectionId: string): Promise<void> {
+    await this.page.locator(sectionId).scrollIntoViewIfNeeded();
+  }
+
+  navLink(label: string): Locator {
+    return this.sidebarNav.getByRole('link', { name: label });
   }
 }
