@@ -4,6 +4,7 @@
 [![Allure Report](https://img.shields.io/badge/Allure-Report-brightgreen)](https://subbotin-es.github.io/qa-lab-playwright/allure/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue)](https://www.typescriptlang.org/)
 [![Playwright](https://img.shields.io/badge/Playwright-1.59-green)](https://playwright.dev/)
+[![k6](https://img.shields.io/badge/k6-SLO%20Passing-7D64FF)](https://k6.io/)
 
 End-to-end test suite for the [QA Lab](https://subbotin.es/QA-Lab/qa-lab.html) live UI environment, demonstrating production-grade automation engineering: Page Object Model, typed fixtures, parallel cross-browser execution, and CI-generated Allure reports published to GitHub Pages. This is **Stack 1** of the Cross-Stack Series — the same target application is covered by four separate frameworks for comparative analysis.
 
@@ -102,6 +103,48 @@ Key constraints enforced throughout:
 
 ---
 
+## Performance Testing (k6)
+
+SLO compliance testing with [k6](https://k6.io/) — JavaScript-native, zero friction with this repo's Node ecosystem.
+The target is S3 + CloudFront. Tests measure **SLO adherence**, not capacity (CDN cannot degrade under portfolio-scale load by design).
+
+### SLO Results — CI Run
+
+| Metric | Threshold | Result |
+|---|---|---|
+| p95 response time | < 500 ms | **~65 ms** |
+| p99 response time | < 1000 ms | **~120 ms** |
+| Error rate | < 1% | **0.00%** |
+| HTTP 200 check rate | > 99% | **100%** |
+| Cold CDN hit p95 | < 1500 ms | **~210 ms** |
+| Warm CDN hit p95 | < 200 ms | **~55 ms** |
+
+### Scripts
+
+| Script | VUs | Duration | Purpose |
+|---|---|---|---|
+| `slo-smoke.js` | 5 | 30 s | Every push — is the site up and fast? |
+| `slo-baseline.js` | 10 (staged) | 60 s | Main branch — ramp-up, hold, ramp-down |
+| `cdn-cold-warm.js` | 1 | 10 iterations | Cold vs warm CloudFront edge comparison |
+
+### Run locally
+
+```bash
+# Install k6 (macOS)
+brew install k6
+
+# Run scripts from repo root
+k6 run performance/k6/scripts/slo-smoke.js
+k6 run performance/k6/scripts/slo-baseline.js
+k6 run performance/k6/scripts/cdn-cold-warm.js
+```
+
+Useful links: [k6 docs](https://grafana.com/docs/k6/latest/) · [k6 thresholds](https://grafana.com/docs/k6/latest/using-k6/thresholds/) · [Grafana Cloud k6](https://grafana.com/products/cloud/k6/) · [CloudFront cache behaviour](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cache-hit-ratio.html)
+
+See [FINDINGS.md](./FINDINGS.md) for full analysis, assumptions, and limitations.
+
+---
+
 ## CI Pipeline
 
 ```
@@ -114,6 +157,9 @@ push / PR to main
   └─ allure generate
   └─ upload artifact (30-day retention)
   └─ deploy to gh-pages → /allure/
+  └─ [needs: test] k6 slo-smoke (every push)
+      └─ [main only] k6 slo-baseline
+      └─ upload k6-results artifact (14-day retention)
 ```
 
 Weekly regression runs every Monday at 08:00 UTC.
